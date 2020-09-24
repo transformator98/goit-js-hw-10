@@ -5,51 +5,55 @@ const Theme = {
   LIGHT: 'light-theme',
   DARK: 'dark-theme',
 };
-/**
- * Записываем в localStorage
- * localStorage.setItem('theme', JSON.stringify(Theme.LIGHT));
- * localStorage.setItem('theme', JSON.stringify(Theme.DARK));
- *
- * Удаление
- * localStorage.remove('theme');
- *
- */
 
-inputRef.addEventListener('click', onChecked);
+inputRef.addEventListener('click', applyTheme);
 
-/**
- * Добавлеие и удаление checked
- *
- */
-function onChecked() {
-  !inputRef.hasAttribute('checked')
-    ? inputRef.setAttribute('checked', true)
-    : inputRef.removeAttribute('checked');
-
-  changeTheme();
+function applyTheme() {
+  const theme = bodyRef.classList.contains('dark-theme');
+  theme ? lightTheme() : darkTheme();
+  onChecked();
 }
-/**
- * добавит 'light-theme', или 'dark-theme',
- */
-function changeTheme() {
-  !inputRef.hasAttribute('checked') ? lightTheme() : darkTheme();
+
+checkTheme();
+
+function checkTheme() {
+  const theme = localStorage.getItem('theme');
+
+  if (theme === '"light-theme"') {
+    lightTheme();
+  }
+  if (theme === '"dark-theme"') {
+    darkTheme();
+    onChecked();
+  }
 }
 
 function lightTheme() {
   bodyRef.classList.add('light-theme');
   bodyRef.classList.remove('dark-theme');
-  const light = JSON.stringify(Theme.LIGHT);
-  localStorage.setItem('theme', light);
+
+  lightThemeLocalStorage();
 }
 
 function darkTheme() {
   bodyRef.classList.remove('light-theme');
   bodyRef.classList.add('dark-theme');
+
+  darkThemeLocalStorage();
+}
+
+function lightThemeLocalStorage() {
+  const light = JSON.stringify(Theme.LIGHT);
+  localStorage.setItem('theme', light);
+}
+
+function darkThemeLocalStorage() {
   const dark = JSON.stringify(Theme.DARK);
   localStorage.setItem('theme', dark);
 }
 
-// const savadTheme = localStorage.getItem('theme');
-// if (savadTheme) {
-//   console.log(savadTheme);
-// }
+function onChecked() {
+  !inputRef.hasAttribute('checked')
+    ? inputRef.setAttribute('checked', true)
+    : inputRef.removeAttribute('checked');
+}
